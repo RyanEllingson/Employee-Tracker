@@ -1,10 +1,12 @@
 const orm = require("./config/orm.js");
 const inquirer = require("inquirer");
 
-// Start program by displaying the employees, then give user list of options for what to do next:
 // View employees, view departments, view roles, add employee, add department, add role, update role, update manager, 
-// view employees by department, view employees by manager, delete employee, delete role, delete department, quit
+// view employees by manager, delete employee, delete role, delete department, quit
 
+
+// This function generates the top-level choices for the user.  Upon selecting any of them, a new function is executed
+// specific to that choice.  Upon completion of the selected task, this function is called once again.
 function mainMenu() {
     console.log("Welcome to the Employee Tracker!\n")
     inquirer.prompt({
@@ -72,6 +74,7 @@ function mainMenu() {
     });
 }
 
+// Prompt user for information about new employee, calls ORM function to add it to the database
 function addEmployeePrompt() {
     orm.getEmployees()
     .then(function(res) {
@@ -128,6 +131,7 @@ function addEmployeePrompt() {
     });
 }
 
+// Prompts user for information needed to make new department, then calls ORM function to add it to the database
 function addDepartmentPrompt() {
     orm.getDepartments()
     .then(function(response) {
@@ -154,6 +158,7 @@ function addDepartmentPrompt() {
     });
 }
 
+// Prompts user for information needed to make a new role, then calls ORM function to add it to the database
 function addRolePrompt() {
     orm.getRoles()
     .then(function(roles) {
@@ -199,6 +204,7 @@ function addRolePrompt() {
     }); 
 }
 
+// Grabs all employees, asks user which one they want to update, asks what role the employee should have, then calls ORM function to update the database
 function updateRolePrompt() {
     orm.getEmployees()
     .then(function(res) {
@@ -235,6 +241,7 @@ function updateRolePrompt() {
     })
 }
 
+// Grabs all employees, asks user which one they want to update, asks what manager the employee should have, then calls ORM function to update the database
 function updateManagerPrompt() {
     orm.getEmployees()
     .then(function(employees) {
@@ -270,6 +277,7 @@ function updateManagerPrompt() {
     });
 }
 
+// Grabs all employees, asks the user for which one they want to see direct reports, then calls ORM function to query database and display results
 function displayByMgrPrompt() {
     orm.getEmployees()
     .then(function(employees) {
@@ -293,6 +301,7 @@ function displayByMgrPrompt() {
     });
 }
 
+// Grabs all employees, asks user which one they want to delete, then calls ORM function to delete it from the database
 function deleteEmployeePrompt() {
     orm.getEmployees()
     .then(function(employees) {
@@ -316,6 +325,7 @@ function deleteEmployeePrompt() {
     });
 }
 
+// Grabs all roles, asks user which one they want to delete, then calls ORM function to delete it from the database
 function deleteRolePrompt() {
     orm.getRoles()
     .then(function(roles) {
@@ -339,6 +349,7 @@ function deleteRolePrompt() {
     });
 }
 
+// Grabs all departments, asks user which one they want to delete, then calls ORM function to delete it from the database
 function deleteDepartmentPrompt() {
     orm.getDepartments()
     .then(function(depts) {
@@ -362,6 +373,7 @@ function deleteDepartmentPrompt() {
     });
 }
 
+// Grabs all departments, asks user for which one they want to see sum of salaries, then calls ORM function to query database and display results
 function displayUtilizedBudgetPrompt() {
     orm.getDepartments()
     .then(function(depts) {
