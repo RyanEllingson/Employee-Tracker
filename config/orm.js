@@ -8,6 +8,7 @@ const orm = {
                 if (err) {
                     return reject(err);
                 }
+                console.log("Department successfully added!");
                 return resolve();
             });
         });
@@ -20,6 +21,7 @@ const orm = {
                 if (err) {
                     return reject(err);
                 }
+                console.log("Role successfully added!");
                 return resolve();
             });
         });
@@ -113,15 +115,7 @@ const orm = {
                 if (err) {
                     return reject(err);
                 }
-                const roleArray = [];
-                for (let i=0; i<result.length; i++) {
-                    const roleObj = {
-                        id: result[i].id,
-                        title: result[i].title
-                    };
-                    roleArray.push(roleObj);
-                }
-                return resolve(roleArray);
+                return resolve(result);
             });
         });
     },
@@ -137,6 +131,17 @@ const orm = {
             });
         });
         
+    },
+    getDepartments: function() {
+        return new Promise(function(resolve, reject) {
+            const queryString = "SELECT * FROM departments";
+            connection.query(queryString, function(err, result) {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result);
+            });
+        });
     },
     updateRole: function(empId, newRole) {
         return new Promise(function(resolve, reject) {
@@ -179,7 +184,7 @@ const orm = {
                     if (err) {
                         return reject(err);
                     }
-                    console.table(result);
+                    console.log("Employee's manager successfully updated!");
                     return resolve();
                 });
         });
@@ -187,12 +192,24 @@ const orm = {
     },
     viewEmpsByMgr: function(mgrId) {
         return new Promise(function(resolve, reject) {
-            const queryString = "SELECT * FROM employees WHERE manager_id = ?";
+            const queryString = 'SELECT employees.id, first_name, last_name, title, salary, name, manager_id FROM employees LEFT JOIN roles ON employees.role_id = roles.id LEFT JOIN departments ON roles.department_id = departments.id WHERE manager_id = ?';
             connection.query(queryString, mgrId, function(err, result) {
                 if (err) {
                     return reject(err);
                 }
-                console.table(result);
+                let newTable = [];
+                for (let i=0; i< result.length; i++) {
+                    const tableElement = {
+                        "Employee ID": result[i].id,
+                        "First Name": result[i].first_name,
+                        "Last Name": result[i].last_name,
+                        "Title": result[i].title,
+                        "Salary": result[i].salary,
+                        "Department": result[i].name
+                    };
+                    newTable.push(tableElement);
+                }
+                console.table(newTable);
                 return resolve();
             });
         });
@@ -205,7 +222,7 @@ const orm = {
                 if (err) {
                     return reject(err);
                 }
-                console.table(result);
+                console.log("Record successfully deleted");
                 return resolve();
             });
         });
